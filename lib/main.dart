@@ -1,20 +1,28 @@
-import 'package:despesas/models/transection.dart';
+import 'package:despesas/components/transaction_form.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './models/transaction.dart';
+import './components/transection_list.dart';
+import './components/transaction_form.dart';
+import 'dart:math';
 
-main() => runApp(Main());
+main() => runApp(ExpensesApp());
 
-class Main extends StatelessWidget {
-  const Main({Key? key}) : super(key: key);
-
+class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHome(),
+      home: MyHomePage(),
     );
   }
 }
 
-class MyHome extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   final _transaction = [
     Transaction(
       id: 1,
@@ -30,30 +38,92 @@ class MyHome extends StatelessWidget {
     ),
   ];
 
+  _addTransaction(String title, double value) {
+    final newTrasaction = Transaction(
+        id: Random().nextDouble().toInt(),
+        title: title,
+        value: value,
+        date: DateTime.now());
+
+    setState(() {
+      _transaction.add(newTrasaction);
+    });
+
+    Navigator.of(context).pop();
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            backgroundColor: Colors.green,
+            contentTextStyle: const TextStyle(
+              color: Colors.white,
+            ),
+            titleTextStyle: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16
+            ),
+            title: const Text("Aviso"),
+            content: const Text("Cadastrado com sucesso"),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  _openTransactionFormModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return TransactionForm(_addTransaction);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Despesas Pessoais"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            width: double.infinity,
-            child: Card(
-              color: Colors.blue,
-              child: Text("Gráfico"),
-              elevation: 5,
-            ),
-          ),
-          Card(
-            child: Text("Lista de transações"),
-            elevation: 5,
-          ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _openTransactionFormModal(context),
+          )
         ],
       ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: double.infinity,
+              child: Card(
+                color: Colors.blue,
+                child: Text("Gráfico"),
+                elevation: 5,
+              ),
+            ),
+            TransactionList(_transaction),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _openTransactionFormModal(context),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
