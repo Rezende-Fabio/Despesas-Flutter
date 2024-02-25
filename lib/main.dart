@@ -13,6 +13,9 @@ class ExpensesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MyHomePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+      ),
     );
   }
 }
@@ -61,10 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.white,
             ),
             titleTextStyle: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16
-            ),
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
             title: const Text("Aviso"),
             content: const Text("Cadastrado com sucesso"),
             actions: [
@@ -73,9 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.white
-                ),
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
               )
             ],
           );
