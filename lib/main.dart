@@ -36,36 +36,36 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transaction = [
-    Transaction(
-      id: 0,
-      title: "Cartão de crédito",
-      value: 950.76,
-      date: DateTime.now().subtract(Duration(days: 33)),
-    ),
-    Transaction(
-      id: 1,
-      title: "Novo Tenis de corrida",
-      value: 310.76,
-      date: DateTime.now().subtract(Duration(days: 5)),
-    ),
-    Transaction(
-      id: 2,
-      title: "Conta de Luz",
-      value: 150.98,
-      date: DateTime.now().subtract(Duration(days: 4)),
-    ),
-    Transaction(
-      id: 3,
-      title: "Conta de Agua",
-      value: 5000.76,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 4,
-      title: "Lanche",
-      value: 150.98,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 0,
+    //   title: "Cartão de crédito",
+    //   value: 950.76,
+    //   date: DateTime.now().subtract(Duration(days: 33)),
+    // ),
+    // Transaction(
+    //   id: 1,
+    //   title: "Novo Tenis de corrida",
+    //   value: 310.76,
+    //   date: DateTime.now().subtract(Duration(days: 5)),
+    // ),
+    // Transaction(
+    //   id: 2,
+    //   title: "Conta de Luz",
+    //   value: 150.98,
+    //   date: DateTime.now().subtract(Duration(days: 4)),
+    // ),
+    // Transaction(
+    //   id: 3,
+    //   title: "Conta de Agua",
+    //   value: 5000.76,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 4,
+    //   title: "Lanche",
+    //   value: 150.98,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   List<Transaction> get _recentTransaction {
@@ -76,12 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTrasaction = Transaction(
         id: Random().nextDouble().toInt(),
         title: title,
         value: value,
-        date: DateTime.now());
+        date: date);
 
     setState(() {
       _transaction.add(newTrasaction);
