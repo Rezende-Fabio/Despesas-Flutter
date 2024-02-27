@@ -35,38 +35,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transaction = [
-    // Transaction(
-    //   id: 0,
-    //   title: "Cartão de crédito",
-    //   value: 950.76,
-    //   date: DateTime.now().subtract(Duration(days: 33)),
-    // ),
-    // Transaction(
-    //   id: 1,
-    //   title: "Novo Tenis de corrida",
-    //   value: 310.76,
-    //   date: DateTime.now().subtract(Duration(days: 5)),
-    // ),
-    // Transaction(
-    //   id: 2,
-    //   title: "Conta de Luz",
-    //   value: 150.98,
-    //   date: DateTime.now().subtract(Duration(days: 4)),
-    // ),
-    // Transaction(
-    //   id: 3,
-    //   title: "Conta de Agua",
-    //   value: 5000.76,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 4,
-    //   title: "Lanche",
-    //   value: 150.98,
-    //   date: DateTime.now(),
-    // ),
-  ];
+  final List<Transaction> _transaction = [];
 
   List<Transaction> get _recentTransaction {
     return _transaction.where((element) {
@@ -78,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _addTransaction(String title, double value, DateTime date) {
     final newTrasaction = Transaction(
-        id: Random().nextDouble().toInt(),
+        id: Random().nextInt(100 - 1 + 1) + 1,
         title: title,
         value: value,
         date: date);
@@ -115,6 +84,12 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  _removeTrasaction(int id) {
+    setState(() {
+      _transaction.removeWhere((element) => element.id == id);
+    });
+  }
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -143,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(recentTransaction: _recentTransaction),
-            TransactionList(_transaction),
+            TransactionList(_transaction, _removeTrasaction),
           ],
         ),
       ),
