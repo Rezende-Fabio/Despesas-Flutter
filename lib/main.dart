@@ -1,3 +1,4 @@
+import 'package:despesas/components/chart.dart';
 import 'package:despesas/components/transaction_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,17 @@ class ExpensesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MyHomePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        fontFamily: 'Quicksand',
+        appBarTheme: AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -23,27 +35,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _transaction = [
-    Transaction(
-      id: 1,
-      title: "Novo Tenis de corrida",
-      value: 310.76,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 2,
-      title: "Conta de Luz",
-      value: 150.98,
-      date: DateTime.now(),
-    ),
-  ];
+  final List<Transaction> _transaction = [];
 
-  _addTransaction(String title, double value) {
+  List<Transaction> get _recentTransaction {
+    return _transaction.where((element) {
+      return element.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
+    }).toList();
+  }
+
+  _addTransaction(String title, double value, DateTime date) {
     final newTrasaction = Transaction(
-        id: Random().nextDouble().toInt(),
+        id: Random().nextInt(100 - 1 + 1) + 1,
         title: title,
         value: value,
-        date: DateTime.now());
+        date: date);
 
     setState(() {
       _transaction.add(newTrasaction);
@@ -61,10 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.white,
             ),
             titleTextStyle: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16
-            ),
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
             title: const Text("Aviso"),
             content: const Text("Cadastrado com sucesso"),
             actions: [
@@ -73,13 +77,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.white
-                ),
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
               )
             ],
           );
         });
+  }
+
+  _removeTrasaction(int id) {
+    setState(() {
+      _transaction.removeWhere((element) => element.id == id);
+    });
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -95,7 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Despesas Pessoais"),
+        title: Text(
+          "Despesas Pessoais",
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -107,15 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text("Gráfico"),
-                elevation: 5,
-              ),
-            ),
-            TransactionList(_transaction),
+            Chart(recentTransaction: _recentTransaction),
+            TransactionList(_transaction, _removeTrasaction),
           ],
         ),
       ),
